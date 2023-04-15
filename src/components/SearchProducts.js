@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState, useMemo, useCallback } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faStar} from '@fortawesome/free-solid-svg-icons'
 import ProductContext from "../context/ProductContext";
 
 function SearchProducts() {
+    const navigate = useNavigate()
     const [filterData,setFilterData]  = useState([])
     let {name,filtername } = useParams();
     const {productList} = useContext(ProductContext)
@@ -23,6 +24,17 @@ function SearchProducts() {
         //     return filname[0]?.toLowerCase() === item.category.toLowerCase()})
         return fildata.flat()
     },[filtername,memolist])
+
+    const FilterBrandNames = useMemo(()=>{
+      let bname = ''
+      
+      return filterData?.filter((item)=>{
+      if(bname !== item.brand){
+        bname = item.brand
+        return true
+      }
+      return false
+    }).map((item)=>item.brand)},[filterData])
 
     useEffect(()=>{        
         if(memolist !== null){
@@ -56,9 +68,12 @@ function SearchProducts() {
           </div>
           <div className="search_products_wrap_items_1_items">
             <div className="search_products_wrap_items_1_head">Brand</div>
-            <div>
-              <input type="checkbox" /> <span>Motorala</span>
-            </div>
+              {FilterBrandNames.map((brandName,idx)=>{                
+                return <div key={brandName+idx}>
+                          <input type="checkbox" name="brand"/> <span>{brandName}</span>
+                        </div> 
+              })}
+              {/* <input type="checkbox" /> <span>Motorala</span> */}
           </div>
           <div className="search_products_wrap_items_1_items">
             <div className="search_products_wrap_items_1_head">
@@ -79,7 +94,12 @@ function SearchProducts() {
           </div>
           <div className="search_products_wrap_items_2_productlist_holder">
             {filterData.map((itemlis,idx)=>{
-                return <div key={itemlis.title+idx} className="search_products_wrap_items_2_productlist_card">
+                return <div
+                onClick={()=>{
+                  let title = itemlis.title.replace(itemlis.title,itemlis.title.split(' ').join('-'))
+                  navigate(`/product/${itemlis.category}/${title}`, {state: {productdetail:itemlis}})
+                }}
+                key={itemlis.title+idx} className="search_products_wrap_items_2_productlist_card">
               <div className="search_products_wrap_items_2_productlist_card_details">
                 <div className="search_products_wrap_items_2_productlist_card_details_img">
                   <img
@@ -91,7 +111,8 @@ function SearchProducts() {
                   <div>{itemlis.title}</div>
                   <div>{itemlis.rating}<span><FontAwesomeIcon color="orange" size="xs" icon={faStar}/> </span> 4,651 Rating & 747 Reviews</div>
                   <ul>
-                    <li>8 GB RAM | 128 GB ROM | Expandable Upto 1 TB</li>
+                    <li>{itemlis.description}</li>
+                    <li style={{color:'green'}}>Stock: {itemlis.stock}</li>
                     <li>1 Year Manufacturer Warranty for Phone and 6 Months Warranty for In the Box Accessories</li>
                   </ul>
                 </div>
