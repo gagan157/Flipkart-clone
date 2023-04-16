@@ -7,6 +7,10 @@ import ProductContext from "../context/ProductContext";
 function SearchProducts() {
     const navigate = useNavigate()
     const [filterData,setFilterData]  = useState([])
+    const [menualFilter,setManualFilter] = useState([])
+    const [filterManage,setFilterManage] = useState({brand:[],price:[]})
+
+
     let {name,filtername } = useParams();
     const {productList} = useContext(ProductContext)
     const memolist = useMemo(()=>productList,[productList])
@@ -19,31 +23,59 @@ function SearchProducts() {
         let fildata = filname.map((catname)=>{
             return memolist.filter((item)=> catname.toLowerCase() === item.category.toLowerCase())
         })
-        console.log(fildata.flat())
-        // return memolist.filter((item,idx)=> {           
-        //     return filname[0]?.toLowerCase() === item.category.toLowerCase()})
         return fildata.flat()
     },[filtername,memolist])
 
     const FilterBrandNames = useMemo(()=>{
-      let bname = ''
-      
+      let bname = ''      
       return filterData?.filter((item)=>{
       if(bname !== item.brand){
         bname = item.brand
         return true
       }
       return false
-    }).map((item)=>item.brand)},[filterData])
+    }).map((item)=>{return {name:item.brand,checked:false}})},[filterData])
+
+    const handleBrandFilter = useCallback((data)=>{  
+      console.log('handlebrand')
+      let {brand} = filterManage;
+      let particularData = brand.some((item)=>item.name === data.name)
+  
+      if(particularData){
+        let fmdata = brand.filter((item)=>item.name !== data.name)        
+        setFilterManage({...filterManage,brand:[...fmdata]})
+        setManualFilter([...menualFilter.filter((item)=> item.brand !== data.name)])
+      }
+      else{
+          let fndata = [...filterManage.brand,data]
+          setFilterManage({...filterManage,brand:[...fndata]})
+
+          let filldata = fndata.map((item)=>item.name).map((bn)=>{
+              return filterData.filter((item)=>item.brand === bn)
+          }).flat()
+         
+          setManualFilter([...filldata])
+      }
+    },[filterManage.brand,menualFilter])
+
+   const lowToHighPrice = ()=>setManualFilter([...menualFilter.sort((a,b)=>a.price - b.price)])
+   const highToLowPrice =()=> setManualFilter([...menualFilter.sort((a,b)=>b.price - a.price)])
+   const popularity = ()=> setManualFilter([...filterData])
+
+    useEffect(()=>{    
+        if(filterManage.brand.length === 0){
+          setManualFilter([...filterData])
+        }
+    },[filterManage.brand])
 
     useEffect(()=>{        
         if(memolist !== null){
             setFilterData([...filterSubNav()])
+            setManualFilter([...filterSubNav()])
         }
     },[memolist,filterSubNav])
   return (
-    <div className="search_products_container">
-    {/* {console.log(filtername)} */}
+    <div className="search_products_container">   
       <div className="search_products_wrap">
         <div className="search_products_wrap_items search_products_wrap_items_1">
           <div className="search_products_wrap_items_1_topHead">filters</div>
@@ -68,9 +100,12 @@ function SearchProducts() {
           </div>
           <div className="search_products_wrap_items_1_items">
             <div className="search_products_wrap_items_1_head">Brand</div>
-              {FilterBrandNames.map((brandName,idx)=>{                
-                return <div key={brandName+idx}>
-                          <input type="checkbox" name="brand"/> <span>{brandName}</span>
+              { FilterBrandNames.map((brand,idx)=>{                
+                return <div key={brand.name+idx}>
+                          <input onChange={(e)=>{
+                            
+                            handleBrandFilter({name:brand.name, checked:e.target.checked})                            
+                          }} type="checkbox" value={brand.name} name="brand"/> <span>{brand.name}</span>
                         </div> 
               })}
               {/* <input type="checkbox" /> <span>Motorala</span> */}
@@ -87,13 +122,13 @@ function SearchProducts() {
         <div className="search_products_wrap_items search_products_wrap_items_2">
           <div className="search_products_wrap_items_2_sort_by">
             <div>sort by</div>
-            <div>popularity</div>
-            <div>price-low to high</div>
-            <div>price-high to low</div>
-            <div>newest first</div>
+            <div onClick={()=>popularity()}>popularity</div>
+            <div onClick={()=>lowToHighPrice()}>price-low to high</div>
+            <div onClick={()=>highToLowPrice()}>price-high to low</div>
+           
           </div>
           <div className="search_products_wrap_items_2_productlist_holder">
-            {filterData.map((itemlis,idx)=>{
+            {menualFilter.map((itemlis,idx)=>{
                 return <div
                 onClick={()=>{
                   let title = itemlis.title.replace(itemlis.title,itemlis.title.split(' ').join('-'))
