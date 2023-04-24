@@ -1574,25 +1574,26 @@ footer{
     text-transform: uppercase;
     font-weight: bold;
     padding: 1rem;
+    cursor: pointer;
 }
-.search_products_wrap_items_1 > div:not(:first-child){
+.search_products_wrap_items_1 .allFiltersWrap > div{
     border-top: 1px solid rgb(233, 233, 233);
     padding: 1em;
 }
-.search_products_wrap_items_1_head{
+.allFiltersWrap .search_products_wrap_items_1_head {
     font-size: 1.1rem;
     text-transform: capitalize;
     font-weight: 500;
     margin-bottom: 1em;
 }
-.search_products_wrap_items_1_items > div:not(:first-child){
+.allFiltersWrap .search_products_wrap_items_1_items  > div:not(:first-child){
     padding: 0 1em;
     margin: .5em 0;
 }
-.search_products_wrap_items_1_items input[type="range"]{
+.allFiltersWrap .search_products_wrap_items_1_items input[type="range"]{
     width: 100%;
 }
-.search_products_wrap_items_1_selecter{
+.allFiltersWrap .search_products_wrap_items_1_selecter{
     display: flex;
     justify-content: space-between;
     align-items: center;
