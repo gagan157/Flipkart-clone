@@ -24,6 +24,7 @@ import {
 import { Logincontext } from "../context/LoginContext";
 import { NavLink, useNavigate } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
+import ProductContext from "../context/ProductContext";
 
 const loginDropdownCotent = [
   { icon: faUser, title: "My Profile", link: "underconstruction" },
@@ -54,6 +55,9 @@ const moreDropdown = [
 
 function Navbar({ handleOpenModel, isModelOpen }) {
   let { logindetails, SetLoginDetails } = useContext(Logincontext);
+  const { productList } = useContext(ProductContext);
+  const [searchItem,setSearchItem] = useState('');
+  const [searchdata,setSearchData] = useState([]);
   let { cartItems } = useContext(CartContext);
   const [mobilebar,setMobileBar] = useState(false)
   const navigate = useNavigate();
@@ -89,6 +93,34 @@ function Navbar({ handleOpenModel, isModelOpen }) {
   function handleGotoHome() {
     navigate("/");
   }
+
+  function handleSerachOnChange(e){
+    setSearchItem(e.target.value);
+    
+    if(e.target.value === ''){
+      setSearchData([])
+    }
+  }
+
+  function handleSerachSubmit(e){
+    e.preventDefault();
+    if(searchItem){
+      setSearchData([])
+      setSearchItem('')
+      navigate(`/${'others'}/${searchItem}`)
+    }
+  }
+  
+  useEffect(()=>{
+    if(searchItem){
+      let id = setTimeout(()=>{        
+        let searchdata = productList.filter((item)=>{return item.category.toLowerCase().indexOf(searchItem.toLowerCase()) !== -1 || item.title.toLowerCase().indexOf(searchItem.toLowerCase()) !== -1 || item.description.toLowerCase().indexOf(searchItem.toLowerCase()) !== -1})
+        setSearchData([...searchdata])
+      },1000);
+      return ()=> clearTimeout(id)
+    }
+  },[searchItem,productList])
+
   useEffect(()=>{
     setMobileBar(false)
   },[navigate])
@@ -106,13 +138,27 @@ function Navbar({ handleOpenModel, isModelOpen }) {
         </div>
         <div className="nav-bar-main">
           <div className="form">
-            <form>
+            <form onSubmit={handleSerachSubmit}>
               <input
+                onChange={handleSerachOnChange}
                 type={"text"}
+                value={searchItem}
                 placeholder="Search for products, brands and more"
               />
-              <FontAwesomeIcon className="srch-btn" icon={faMagnifyingGlass} />
+              <button type="submit" className="srch-btn">
+                <FontAwesomeIcon icon={faMagnifyingGlass} />
+              </button>
             </form>
+            <div className="Search_form_result" >
+                {searchdata && searchdata.map((prd,idx)=>{
+                   return <div onClick={()=>{ 
+                    setSearchData([])
+                    setSearchItem('')
+                    let title = prd.title.replace(prd.title,prd.title.split(' ').join('-'))
+                    navigate(`/product/${prd.category}/${title}`, {state: {productdetail:prd}})
+                   }} className="Search_form_result_items" key={prd.title+idx}>{prd.title}</div>
+                })}
+            </div>
           </div>
 
           <div className="login">

@@ -134,7 +134,30 @@ nav .nav-bar-main .form{
     /* width: 100px; */
     height: 10%;
     margin-left: .5rem;
+    position: relative;
 }
+nav .nav-bar-main .form .Search_form_result{
+    position: absolute;
+    width: 100%;
+    height: fit-content;
+    max-height: 300px;
+    /* padding: 10px; */
+    background-color: white;
+    color: black;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    overflow-y: scroll;
+}
+nav .nav-bar-main .form .Search_form_result .Search_form_result_items{
+    padding: .5em;
+    cursor: pointer;
+}
+nav .nav-bar-main .form .Search_form_result .Search_form_result_items:hover{
+    background-color: rgb(224, 224, 224);
+}
+
 nav .form form{
     position: relative;
     width: 100%;
@@ -158,8 +181,9 @@ nav .form form input:focus{
 nav .form .srch-btn{
     position: absolute;
     cursor: pointer;
+    border: 0;
     font-weight: 800;
-    right: 20px;
+    right: 15px;
     top: 0;
     bottom: 0;
     margin: auto;
