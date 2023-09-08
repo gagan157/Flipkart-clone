@@ -24,6 +24,7 @@ import {
 import { Logincontext } from "../context/LoginContext";
 import { NavLink, useNavigate } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
+import ProductContext from "../context/ProductContext";
 
 const loginDropdownCotent = [
   { icon: faUser, title: "My Profile", link: "underconstruction" },
@@ -41,23 +42,27 @@ const moreDropdown = [
   {
     icon: faBell,
     title: "Notification Preferences",
-    link: "underconstruction",
+    link: "https://www.flipkart.com/communication-preferences/push?t=all",
   },
   {
     icon: faClipboardQuestion,
     title: "24x7 Customer Care",
-    link: "underconstruction",
+    link: "https://www.flipkart.com/helpcentre",
   },
-  { icon: faArrowTrendUp, title: "Advertise", link: "underconstruction" },
-  { icon: faArrowDownLong, title: "Download App", link: "underconstruction" },
+  { icon: faArrowTrendUp, title: "Advertise", link: "https://advertising.flipkart.com/login?returl=/?otracker=ch_vn_advertise_header" },
+  { icon: faArrowDownLong, title: "Download App", link: "https://www.flipkart.com/mobile-apps?otracker=ch_vn_mobile_apps" },
 ];
 
 function Navbar({ handleOpenModel, isModelOpen }) {
   let { logindetails, SetLoginDetails } = useContext(Logincontext);
+  const { productList } = useContext(ProductContext);
+  const [searchItem,setSearchItem] = useState('');
+  const [searchdata,setSearchData] = useState([]);
   let { cartItems } = useContext(CartContext);
   const [mobilebar,setMobileBar] = useState(false)
   const navigate = useNavigate();
   const { name, isLogin } = logindetails;
+  
   function handlelogin(e) {
     handleOpenModel({
       ...isModelOpen,
@@ -89,6 +94,37 @@ function Navbar({ handleOpenModel, isModelOpen }) {
   function handleGotoHome() {
     navigate("/");
   }
+
+  function handleSerachOnChange(e){
+    setSearchItem(e.target.value);
+    
+    if(e.target.value === ''){
+      setSearchData([])
+    }
+  }
+
+  function handleSerachSubmit(e){
+    e.preventDefault();
+    if(searchItem){
+      setSearchData([])
+      setSearchItem('')
+      navigate(`/${'others'}/${searchItem}`)
+    }
+  }
+  function handleClickMoreLink(link){
+    navigate(`/${link}`)
+  }
+  
+  useEffect(()=>{
+    if(searchItem){
+      let id = setTimeout(()=>{        
+        let searchdata = productList.filter((item)=>{return item.category.toLowerCase().indexOf(searchItem.toLowerCase()) !== -1 || item.title.toLowerCase().indexOf(searchItem.toLowerCase()) !== -1 || item.description.toLowerCase().indexOf(searchItem.toLowerCase()) !== -1})
+        setSearchData([...searchdata])
+      },1000);
+      return ()=> clearTimeout(id)
+    }
+  },[searchItem,productList])
+
   useEffect(()=>{
     setMobileBar(false)
   },[navigate])
@@ -106,13 +142,27 @@ function Navbar({ handleOpenModel, isModelOpen }) {
         </div>
         <div className="nav-bar-main">
           <div className="form">
-            <form>
+            <form onSubmit={handleSerachSubmit}>
               <input
+                onChange={handleSerachOnChange}
                 type={"text"}
+                value={searchItem}
                 placeholder="Search for products, brands and more"
               />
-              <FontAwesomeIcon className="srch-btn" icon={faMagnifyingGlass} />
+              <button type="submit" className="srch-btn">
+                <FontAwesomeIcon icon={faMagnifyingGlass} />
+              </button>
             </form>
+            <div className="Search_form_result" >
+                {searchdata && searchdata.map((prd,idx)=>{
+                   return <div onClick={()=>{ 
+                    setSearchData([])
+                    setSearchItem('')
+                    let title = prd.title.replace(prd.title,prd.title.split(' ').join('-'))
+                    navigate(`/product/${prd.category}/${title}`, {state: {productdetail:prd}})
+                   }} className="Search_form_result_items" key={prd.title+idx}>{prd.title}</div>
+                })}
+            </div>
           </div>
 
           <div className="login">
@@ -174,7 +224,7 @@ function Navbar({ handleOpenModel, isModelOpen }) {
               </div>
             </div>
           </div>
-          <div className="seller">Become a Seller</div>
+          <NavLink to={"https://seller.flipkart.com/sell-online/?utm_source=fkwebsite&utm_medium=websitedirect"} target="_blank" className="seller">Become a Seller</NavLink>
           <div className="more-dropdown">
             <div className="more flex">
               <span>More</span>
@@ -186,14 +236,16 @@ function Navbar({ handleOpenModel, isModelOpen }) {
             <div className="more-dropdown-details">
               {moreDropdown.map((item) => {
                 return (
-                  <div
+                  <NavLink  
+                    target="_blank"
+                    to={item.link}                  
                     key={item.title}
                     className="flex moredropdown"
                     style={{ justifyContent: "flex-start" }}
                   >
                     <FontAwesomeIcon icon={item.icon} />
                     <div style={{ fontWeight: "100" }}>{item.title}</div>
-                  </div>
+                  </NavLink>
                 );
               })}
             </div>
@@ -301,7 +353,7 @@ function Navbar({ handleOpenModel, isModelOpen }) {
               </div>
             </div>
           </div>
-          <div className="seller">Become a Seller</div>
+          <NavLink to={"https://seller.flipkart.com/sell-online/?utm_source=fkwebsite&utm_medium=websitedirect"} target="_blank" className="seller">Become a Seller</NavLink>
           <div className="more-dropdown">
             <div className="more flex">
               <span>More</span>
@@ -313,14 +365,16 @@ function Navbar({ handleOpenModel, isModelOpen }) {
             <div className="more-dropdown-details">
               {moreDropdown.map((item) => {
                 return (
-                  <div
+                  <NavLink
+                    to={item.link}
+                    target="_blank"
                     key={item.title}
                     className="flex moredropdown"
                     style={{ justifyContent: "flex-start" }}
                   >
                     <FontAwesomeIcon icon={item.icon} />
                     <div style={{ fontWeight: "100" }}>{item.title}</div>
-                  </div>
+                  </NavLink>
                 );
               })}
             </div>

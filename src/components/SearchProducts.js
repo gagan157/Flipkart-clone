@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import ProductContext from "../context/ProductContext";
@@ -18,10 +18,16 @@ function SearchProducts() {
   const [filterManage, setFilterManage] = useState({ brand: [], price: [] });
 
   let { name, filtername } = useParams();
+  let {state} = useLocation()
+
   const { productList } = useContext(ProductContext);
   const memolist = useMemo(() => productList, [productList]);
 
   const filterSubNav = useCallback(() => {
+    if(state?.data && name === state?.pCategories){
+      return state.data
+    }
+    
     if (filtername === "bestoffer") {
       return memolist.filter((item) => item.discountPercentage >= 15);
     }
@@ -31,6 +37,10 @@ function SearchProducts() {
         (item) => catname.toLowerCase() === item.category.toLowerCase()
       );
     });
+    
+    if(fildata.flat().length === 0){
+      fildata = memolist.filter((item)=>{return item.category.toLowerCase().indexOf(filtername.toLowerCase()) !== -1 || item.title.toLowerCase().indexOf(filtername.toLowerCase()) !== -1 || item.description.toLowerCase().indexOf(filtername.toLowerCase()) !== -1})
+    }
     return fildata.flat();
   }, [filtername, memolist]);
 
@@ -50,8 +60,7 @@ function SearchProducts() {
   }, [filterData]);
 
   const handleBrandFilter = useCallback(
-    (data) => {
-      console.log("handlebrand");
+    (data) => {     
       let { brand } = filterManage;
       let particularData = brand.some((item) => item.name === data.name);
 
@@ -130,7 +139,7 @@ function SearchProducts() {
             </div>
           </div>
           <div className="search_products_wrap_items_1_items">
-            <div className="search_products_wrap_items_1_head">Brand</div>
+            {FilterBrandNames.length !== 0 && <div className="search_products_wrap_items_1_head">Brand</div>}
             {FilterBrandNames.map((brand, idx) => {
               return (
                 <div key={brand.name + idx}>
@@ -169,6 +178,8 @@ function SearchProducts() {
             <div onClick={() => highToLowPrice()}>price-high to low</div>
           </div>
           <div className="search_products_wrap_items_2_productlist_holder">
+            {FilterBrandNames.length === 0 && <div style={{padding:'1em',textAlign:'center',textTransform:'uppercase', fontWeight:'bolder',fontSize:'1.5em'}}>No Data found</div>}
+            
             {menualFilter.map((itemlis, idx) => {
               return (
                 <div

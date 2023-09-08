@@ -134,7 +134,30 @@ nav .nav-bar-main .form{
     /* width: 100px; */
     height: 10%;
     margin-left: .5rem;
+    position: relative;
 }
+nav .nav-bar-main .form .Search_form_result{
+    position: absolute;
+    width: 100%;
+    height: fit-content;
+    max-height: 300px;
+    /* padding: 10px; */
+    background-color: white;
+    color: black;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    overflow-y: scroll;
+}
+nav .nav-bar-main .form .Search_form_result .Search_form_result_items{
+    padding: .5em;
+    cursor: pointer;
+}
+nav .nav-bar-main .form .Search_form_result .Search_form_result_items:hover{
+    background-color: rgb(224, 224, 224);
+}
+
 nav .form form{
     position: relative;
     width: 100%;
@@ -158,8 +181,10 @@ nav .form form input:focus{
 nav .form .srch-btn{
     position: absolute;
     cursor: pointer;
+    border: 0;
+    background-color: transparent;
     font-weight: 800;
-    right: 20px;
+    right: 15px;
     top: 0;
     bottom: 0;
     margin: auto;
@@ -253,7 +278,10 @@ nav .login .login-btn .login-details::before{
 .signup:hover{
     text-decoration: underline;
 }
-
+nav .seller{
+    text-decoration: none;
+    color: white;
+}
 nav .more-dropdown{
     position: relative;
     /* background-color: aqua; */
@@ -269,7 +297,7 @@ nav .more-dropdown:hover > .more-dropdown-details{
 }
 nav .more-dropdown .more-dropdown-details{
     position: absolute;
-    top: 56px;
+    top: 40px;
     width: 220px;
     background-color: white;
     color: black;
@@ -295,9 +323,12 @@ nav .more-dropdown .more-dropdown-details::before{
 }
 .moredropdown{
     padding: 1rem;
+    margin: 0;
     gap: 15px;
     cursor: pointer;
     border-bottom: 1px solid #dbdbdb;
+    text-decoration: none;
+    color: black;
 }
 .moredropdown:hover{
     background-color: #f5f5f5;
@@ -619,6 +650,7 @@ nav .more-dropdown .more-dropdown-details::before{
 }
 
 .prd-slide-arrow{
+    display: none!important;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -627,7 +659,7 @@ nav .more-dropdown .more-dropdown-details::before{
     box-shadow: 0 1px 5px 0 rgba(0,0,0,.11);
     width: 47px;
     height: 104px;
-    display: flex;
+    /* display: flex; */
     justify-content: center;
     align-items: center;
     font-size: 2rem;
@@ -861,6 +893,15 @@ nav .more-dropdown .more-dropdown-details::before{
     display: flex;
     flex-direction: column;
     overflow: hidden;
+}
+.imglist-holder div{
+    height: 100px;
+    overflow: hidden;
+}
+.imglist-holder div img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 .img-holder{
     width: 80%;
@@ -1507,6 +1548,10 @@ footer{
     width: 50%;
     margin: auto;
 }
+.footer-wrap-item ul li a{
+    color: white;
+    text-decoration: none;
+}
 .footer-wrap-item ul li:first-child{
     margin: 1em 0;
     text-transform: uppercase;
@@ -1716,6 +1761,11 @@ footer{
 }
 
 
+@media only screen and (max-width: 1440px) {
+    .prd-slide-arrow{
+        display: flex!important;
+    }
+}
 @media only screen and (max-width: 1250px) {
     .subnav{
         padding: 0 5rem;
@@ -1754,22 +1804,34 @@ footer{
     .ban1{
         height: 120px!important;
     }
-
+    .product-container{
+        max-width: 98%;
+    }
     .prd-left-deatils-holder .imgs-holder{
         width: 100%;
-        height: 300px;
+        height: 400px;
         flex-direction: column-reverse;
     }
     .prd-left-deatils-holder .imgs-holder .img-holder{
         padding: 0;
+        width: 90%;
+        height: 80%;
     }
     .prd-left-deatils-holder .imgs-holder .imglist-holder{
         width: 100%;
+        height: 20%;
         flex-direction: row;
     }
-    .prd-left-deatils-holder .imgs-holder img{
-        flex-shrink: 0!important;
+    .prd-left-deatils-holder .imgs-holder .imglist-holder div{
+        width: 80px;
+        height: 80px;
     }
+    .prd-left-deatils-holder .imgs-holder .imglist-holder div img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
 
 
     .cartholder{
@@ -1825,15 +1887,32 @@ footer{
         padding: 1rem;
     }
     .prd-left-deatils-holder .imgs-holder{
-       height: unset;
+        height: unset;
         border: none;
+    }
+    .prd-left-deatils-holder .imgs-holder .img-holder{
+        width: 100%;
+        height: 500px;
+        padding: 10px;
+    }
+    .prd-left-deatils-holder .imgs-holder .img-holder img{
+        max-width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
     .prd-left-deatils-holder .imgs-holder .imglist-holder{
         border: none!important;
         justify-content: center;
+        gap: 5px;
     }
     .prd-left-deatils-holder .imgs-holder .imglist-holder div{
         width: 100px;
+        height: 100px;
+    }
+    .prd-left-deatils-holder .imgs-holder .imglist-holder div img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
    
     .prd-right-deatils-holder{
@@ -1989,5 +2068,24 @@ footer{
     }
     .banneradsList .bannerads-holder img{
         width: 300px;
+    }
+    .prd-left-deatils-holder .imgs-holder .img-holder{
+        width: 100%;
+        height: 300px;
+        padding: 10px;
+    }
+    .prd-left-deatils-holder .imgs-holder .imglist-holder{
+        border: none!important;
+        justify-content: center;
+        gap: 0;
+    }
+    .prd-left-deatils-holder .imgs-holder .imglist-holder div{
+        width: 80px;
+        height: 80px;
+    }
+    .prd-left-deatils-holder .imgs-holder .imglist-holder div img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 }

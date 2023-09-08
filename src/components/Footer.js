@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 
 function SubFooter(){
     return(
@@ -55,9 +56,9 @@ function Footer() {
             <div className='footer-wrap-item'>
                 <ul>
                     <li>social</li>
-                    <li>facebook</li>
-                    <li>twitter</li>
-                    <li>youtube</li>
+                    <li><Link to={'https://www.facebook.com/flipkart'} target='_blank'>facebook</Link></li>
+                    <li><Link to={'https://twitter.com/flipkart'} target='_blank'>twitter</Link></li>
+                    <li><Link to={'https://www.youtube.com/flipkart'} target='_blank'>youtube</Link></li>
                 </ul>
             </div>
         </div>
