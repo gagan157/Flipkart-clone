@@ -42,15 +42,15 @@ const moreDropdown = [
   {
     icon: faBell,
     title: "Notification Preferences",
-    link: "underconstruction",
+    link: "https://www.flipkart.com/communication-preferences/push?t=all",
   },
   {
     icon: faClipboardQuestion,
     title: "24x7 Customer Care",
-    link: "underconstruction",
+    link: "https://www.flipkart.com/helpcentre",
   },
-  { icon: faArrowTrendUp, title: "Advertise", link: "underconstruction" },
-  { icon: faArrowDownLong, title: "Download App", link: "underconstruction" },
+  { icon: faArrowTrendUp, title: "Advertise", link: "https://advertising.flipkart.com/login?returl=/?otracker=ch_vn_advertise_header" },
+  { icon: faArrowDownLong, title: "Download App", link: "https://www.flipkart.com/mobile-apps?otracker=ch_vn_mobile_apps" },
 ];
 
 function Navbar({ handleOpenModel, isModelOpen }) {
@@ -62,6 +62,7 @@ function Navbar({ handleOpenModel, isModelOpen }) {
   const [mobilebar,setMobileBar] = useState(false)
   const navigate = useNavigate();
   const { name, isLogin } = logindetails;
+  
   function handlelogin(e) {
     handleOpenModel({
       ...isModelOpen,
@@ -109,6 +110,9 @@ function Navbar({ handleOpenModel, isModelOpen }) {
       setSearchItem('')
       navigate(`/${'others'}/${searchItem}`)
     }
+  }
+  function handleClickMoreLink(link){
+    navigate(`/${link}`)
   }
   
   useEffect(()=>{
@@ -220,7 +224,7 @@ function Navbar({ handleOpenModel, isModelOpen }) {
               </div>
             </div>
           </div>
-          <div className="seller">Become a Seller</div>
+          <NavLink to={"https://seller.flipkart.com/sell-online/?utm_source=fkwebsite&utm_medium=websitedirect"} target="_blank" className="seller">Become a Seller</NavLink>
           <div className="more-dropdown">
             <div className="more flex">
               <span>More</span>
@@ -232,14 +236,16 @@ function Navbar({ handleOpenModel, isModelOpen }) {
             <div className="more-dropdown-details">
               {moreDropdown.map((item) => {
                 return (
-                  <div
+                  <NavLink  
+                    target="_blank"
+                    to={item.link}                  
                     key={item.title}
                     className="flex moredropdown"
                     style={{ justifyContent: "flex-start" }}
                   >
                     <FontAwesomeIcon icon={item.icon} />
                     <div style={{ fontWeight: "100" }}>{item.title}</div>
-                  </div>
+                  </NavLink>
                 );
               })}
             </div>
@@ -347,7 +353,7 @@ function Navbar({ handleOpenModel, isModelOpen }) {
               </div>
             </div>
           </div>
-          <div className="seller">Become a Seller</div>
+          <NavLink to={"https://seller.flipkart.com/sell-online/?utm_source=fkwebsite&utm_medium=websitedirect"} target="_blank" className="seller">Become a Seller</NavLink>
           <div className="more-dropdown">
             <div className="more flex">
               <span>More</span>
@@ -359,14 +365,16 @@ function Navbar({ handleOpenModel, isModelOpen }) {
             <div className="more-dropdown-details">
               {moreDropdown.map((item) => {
                 return (
-                  <div
+                  <NavLink
+                    to={item.link}
+                    target="_blank"
                     key={item.title}
                     className="flex moredropdown"
                     style={{ justifyContent: "flex-start" }}
                   >
                     <FontAwesomeIcon icon={item.icon} />
                     <div style={{ fontWeight: "100" }}>{item.title}</div>
-                  </div>
+                  </NavLink>
                 );
               })}
             </div>

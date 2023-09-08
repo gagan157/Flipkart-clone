@@ -23,7 +23,9 @@ function RoutersApp({ handleOpenModel, isModelOpen }) {
       <Route path="/product/:category/:name" element={<ProductView />} />
       {/* <Route path="/userProfile" element={<RouteAfterLogin component={<UserProfile/>} />} /> */}
       <Route path="/underconstruction" element={<CommingSoon />} />
-      <Route path="/:name/:filtername" element={<SearchProducts />} />
+      <Route path="/:name" element={<SearchProducts />} >
+        <Route path="/:name/:filtername" element={<SearchProducts />} />
+      </Route>
       <Route path="/user/orderPlaced/:id" element={<OrderPlaced />} />
       <Route path="*" element={<NoPageFound />} />
     </Routes>

@@ -1,7 +1,7 @@
 import { faTag } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useContext } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
 import { MessageContext } from "../context/MessageContext";
 
@@ -11,6 +11,8 @@ function ProductView(){
   const [mainImg, setMainImg] = useState(productDetail.images[0]);
   const { cartItems, setCartItems } = useContext(CartContext);
   const { msg, setMsg } = useContext(MessageContext);
+
+  const navigate = useNavigate()
 
   function handleProducQuentity(product) {
     let prditem = cartItems.filter((item) => {
@@ -55,6 +57,20 @@ function ProductView(){
       });
     }
   }
+
+  function handleBuyNow(){
+    if (handleProducQuentity(productDetail)) {
+      //if click same product then quantity increase
+      navigate("/marketplace/FLIPKART")
+    } else {
+      handleAddLocalStorage([{ ...productDetail, quantity: 1 }], false);
+      setCartItems((olddata) => {
+        return [{ ...productDetail, quantity: 1 }, ...olddata];
+      });
+      navigate("/marketplace/FLIPKART")
+    }
+  }
+
   function handleAddLocalStorage(mapdata, bulkdata) {
     if (bulkdata) {
       localStorage.setItem("flip-cart", JSON.stringify([...mapdata]));
@@ -102,7 +118,7 @@ function ProductView(){
               })}
             </div>
             <div className="img-holder">
-              <img src={mainImg} alt="" />
+              <img src={mainImg} alt="mainpic" />
             </div>
           </div>
           <div
@@ -120,6 +136,8 @@ function ProductView(){
               Add To CART
             </button>
             <button
+              type="button"
+              onClick={handleBuyNow}
               style={{
                 padding: "18px 8px",
                 borderRadius: "2px",

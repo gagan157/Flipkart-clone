@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import ProductContext from "../context/ProductContext";
@@ -18,10 +18,16 @@ function SearchProducts() {
   const [filterManage, setFilterManage] = useState({ brand: [], price: [] });
 
   let { name, filtername } = useParams();
+  let {state} = useLocation()
+
   const { productList } = useContext(ProductContext);
   const memolist = useMemo(() => productList, [productList]);
 
   const filterSubNav = useCallback(() => {
+    if(state?.data && name === state?.pCategories){
+      return state.data
+    }
+    
     if (filtername === "bestoffer") {
       return memolist.filter((item) => item.discountPercentage >= 15);
     }

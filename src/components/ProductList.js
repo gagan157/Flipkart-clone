@@ -28,6 +28,10 @@ function ProductList({pCategories,prdcatidx}) {
         let title = prd.title.replace(prd.title,prd.title.split(' ').join('-'))
         navigate(`/product/${prd.category}/${title}`, {state: {productdetail:prd}})
     }
+    function handleViewAllProducts(){        
+        let fildata = data.filter(item=>item.category === pCategories)
+        navigate(pCategories,{state:{data:fildata,pCategories}})
+    }
   return (
     <>       
         <div className='prdlistWrapper'>
@@ -36,7 +40,7 @@ function ProductList({pCategories,prdcatidx}) {
                     <h2>Top Deals on</h2>
                     <h2 style={{textTransform:'capitalize'}}>{pCategories}</h2>                    
                 </div>
-                <button>VIEW ALL</button>
+                <button type='button' onClick={handleViewAllProducts}>VIEW ALL</button>
             </div>
             <div className='prdlist' >                
                 {!data?
@@ -51,8 +55,7 @@ function ProductList({pCategories,prdcatidx}) {
                     </div>
                     <div className='prdlist-wrapper' id={`${pCategories}${prdcatidx}`}>
                         
-                        {data.filter((item)=>{
-                                          
+                        {data.filter((item)=>{                                          
                             return item.category === pCategories
                         }).map((prd,idx)=>{    
                             return <div key={pCategories+idx} onClick={()=>{
